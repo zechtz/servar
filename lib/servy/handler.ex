@@ -33,8 +33,7 @@ defmodule Servy.Handler do
 
   # name=Baloo&type=Brown
   def route(%Conv{method: "POST", path: "/bears"} = conv) do
-    params = %{ "name" => "Baloo", "type" => "Brown" }
-    %{ conv | status: 201, resp_body: "Created a #{params["type"]} bear name #{params["name"]}!" }
+    %{ conv | status: 201, resp_body: "Created a #{conv.params["type"]} bear named #{conv.params["name"]}!" }
   end
 
   def route(%Conv{method: "GET", path: "/bears" <> id} = conv) do
@@ -56,11 +55,11 @@ defmodule Servy.Handler do
     end
   end
 
-  def route(%{method: _method, path: path} = conv) do
+  def route(%Conv{method: _method, path: path} = conv) do
     %{ conv | status: 404, resp_body: "No #{path} found here" }
   end
 
-  def format_response(conv) do
+  def format_response(%Conv{} = conv) do
     """
     HTTP/1.1 #{full_status(conv)}
     Content-Type: text/html
@@ -145,7 +144,7 @@ Accept: */*
 Content-Type: application/x-www-form-urlencoded
 Content-Length: 21
 
-name=Baloo&type=Brow
+name=Baloo&type=Brown
 """
 
 response = Servy.Handler.handle(request)
