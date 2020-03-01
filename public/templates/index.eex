@@ -1,7 +1,8 @@
 <h1> All The Bears!</h1>
 
 <ul>
-  <li>Name - Brow</li>
-  <li>Name - Grizzy</li>
-  <li>Name - Polar</li>
+  <%= for bear <- bears do %>
+    <li><%= bear.name %> - <%= bear.type %></li>
+  <% end %>
 </ul>
+
