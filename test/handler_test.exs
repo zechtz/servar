@@ -104,7 +104,6 @@ defmodule HandlerTest do
     """
   end
 
-
   test "GET /bigfoot" do
     request = """
     GET /bigfoot HTTP/1.1\r
