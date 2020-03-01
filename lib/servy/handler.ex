@@ -38,7 +38,7 @@ defmodule Servy.Handler do
     BearController.create(conv, conv.params)
   end
 
-  def route(%Conv{method: "GET", path: "/bears" <> id} = conv) do
+  def route(%Conv{method: "GET", path: "/bears/" <> id} = conv) do
     params = Map.put(conv.params, "id", id)
     BearController.show(conv, params)
   end
