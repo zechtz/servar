@@ -32,14 +32,14 @@ defmodule Servy.Handler do
 
   def route(%Conv{method: "GET", path: "/snapshots"} = conv) do
     # pid4 = Fetcher.async(fn -> Tracker.get_location("smokey") end)
-    pid4 = Task.async(fn -> Tracker.get_location("smokey") end)
+    task = Task.async(fn -> Tracker.get_location("smokey") end)
 
     snapshots =
       ["cam-1", "cam-2", "cam-3"]
       |> Enum.map(&Task.async(fn -> VideoCam.get_snapshot(&1) end))
       |> Enum.map(&Task.await/1)
 
-    wildthing = Task.await(pid4)
+    wildthing = Task.await(task)
     %{ conv | status: 200, resp_body: inspect {snapshots, wildthing} }
   end
 
