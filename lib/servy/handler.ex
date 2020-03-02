@@ -31,18 +31,14 @@ defmodule Servy.Handler do
   end
 
   def route(%Conv{method: "GET", path: "/snapshots"} = conv) do
-    pid1 = Fetcher.async(fn -> VideoCam.get_snapshot("cam-1") end)
-    pid2 = Fetcher.async(fn -> VideoCam.get_snapshot("cam-2") end)
-    pid3 = Fetcher.async(fn -> VideoCam.get_snapshot("cam-3") end)
     pid4 = Fetcher.async(fn -> Tracker.get_location("smokey") end)
 
+    snapshots =
+      ["cam-1", "cam-2", "cam-3"]
+      |> Enum.map(&Fetcher.async(fn -> VideoCam.get_snapshot(&1) end))
+      |> Enum.map(&Fetcher.get_result/1)
+
     wildthing = Fetcher.get_result(pid4)
-    snapshot1 = Fetcher.get_result(pid1)
-    snapshot2 = Fetcher.get_result(pid2)
-    snapshot3 = Fetcher.get_result(pid3)
-
-    snapshots = [snapshot1, snapshot2, snapshot3]
-
     %{ conv | status: 200, resp_body: inspect {snapshots, wildthing} }
   end
 
