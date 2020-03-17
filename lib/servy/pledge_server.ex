@@ -42,13 +42,13 @@ defmodule Servy.PledgeServer do
   end
 end
 
-alias Servy.PledgeServer
+#alias Servy.PledgeServer
 
-PledgeServer.start()
+#PledgeServer.start()
 
-IO.inspect PledgeServer.create_pledge("Mtabe", 1000)
-IO.inspect PledgeServer.create_pledge("Des", 1200)
-IO.inspect PledgeServer.create_pledge("Zach", 300)
-IO.inspect PledgeServer.create_pledge("Mtati", 500)
+#IO.inspect PledgeServer.create_pledge("Mtabe", 1000)
+#IO.inspect PledgeServer.create_pledge("Des", 1200)
+#IO.inspect PledgeServer.create_pledge("Zach", 300)
+#IO.inspect PledgeServer.create_pledge("Mtati", 500)
 
-IO.inspect PledgeServer.recent_pledges()
+#IO.inspect PledgeServer.recent_pledges()
