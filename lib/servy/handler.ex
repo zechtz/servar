@@ -13,6 +13,7 @@ defmodule Servy.Handler do
   #alias Servy.Fetcher
   alias Servy.VideoCam
   alias Servy.Tracker
+  alias Servy.PledgeController
 
   @doc "Transforms a HTTP request into a HTTP response"
   def handle(request) do
@@ -26,6 +27,15 @@ defmodule Servy.Handler do
   #def route(conv) do
     #route(conv, conv.method, conv.path)
   #end
+
+  def route(%Conv{method: "POST", path: "/pledges"} = conv) do
+    PledgeController.create(conv, conv.params)
+  end
+
+  def route(%Conv{method: "GET", path: "/pledges"} = conv) do
+    PledgeController.index(conv)
+  end
+
   def route(%Conv{method: "GET", path: "/kaboom"}) do
     raise "Kaboom!"
   end
