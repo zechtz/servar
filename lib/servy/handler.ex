@@ -11,8 +11,8 @@ defmodule Servy.Handler do
   alias Servy.BearController
   alias Servy.Api.BearController, as: BearApiController
   #alias Servy.Fetcher
-  alias Servy.VideoCam
-  alias Servy.Tracker
+  #alias Servy.VideoCam
+  #alias Servy.Tracker
   alias Servy.PledgeController
 
   @doc "Transforms a HTTP request into a HTTP response"
@@ -41,16 +41,9 @@ defmodule Servy.Handler do
   end
 
   def route(%Conv{method: "GET", path: "/snapshots"} = conv) do
-    # pid4 = Fetcher.async(fn -> Tracker.get_location("smokey") end)
-    task = Task.async(fn -> Tracker.get_location("smokey") end)
+    sensor_date = Servy.SensorServer.get_sensor_data()
 
-    snapshots =
-      ["cam-1", "cam-2", "cam-3"]
-      |> Enum.map(&Task.async(fn -> VideoCam.get_snapshot(&1) end))
-      |> Enum.map(&Task.await/1)
-
-    wildthing = Task.await(task)
-    %{ conv | status: 200, resp_body: inspect {snapshots, wildthing} }
+    %{ conv | status: 200, resp_body: inspect sensor_date }
   end
 
   def route(%Conv{method: "GET", path: "/hibernate/" <> time} = conv) do
