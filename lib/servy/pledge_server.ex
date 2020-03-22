@@ -14,19 +14,19 @@ defmodule Servy.PledgeServer do
   def create_pledge(name, amount) do
     send @name, {self(), :create_pledge, name, amount}
 
-    receive do {:response, status} -> status end
+    receive do {:response, response} -> response end
   end
 
   def recent_pledges do
     send @name, {self(), :recent_pledges}
 
-    receive do {:response, pledges} -> pledges end
+    receive do {:response, response} -> response end
   end
 
   def total_pledged do
     send @name, {self(), :total_pledged}
 
-    receive do {:response, total} -> total end
+    receive do {:response, response} -> response end
   end
 
   # Server Interface
@@ -45,6 +45,9 @@ defmodule Servy.PledgeServer do
         total = Enum.map(state, &elem(&1, 1)) |> Enum.sum
         send sender, {:response, total}
         listen_loop(state)
+      unexpected ->
+        IO.puts "Unexpected message #{inspect unexpected}"
+        listen_loop(state)
     end
 
   end
@@ -54,16 +57,3 @@ defmodule Servy.PledgeServer do
     {:ok, "pledge-#{:rand.uniform(1000)} by #{name} amount #{amount}"}
   end
 end
-
-alias Servy.PledgeServer
-
-PledgeServer.start()
-
-IO.inspect PledgeServer.create_pledge("Mtabe", 1000)
-IO.inspect PledgeServer.create_pledge("Des", 1200)
-IO.inspect PledgeServer.create_pledge("Zach", 300)
-IO.inspect PledgeServer.create_pledge("Mtati", 500)
-
-IO.inspect PledgeServer.recent_pledges()
-
-IO.inspect PledgeServer.total_pledged()
