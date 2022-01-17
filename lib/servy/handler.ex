@@ -10,9 +10,9 @@ defmodule Servy.Handler do
   alias Servy.Conv, as: Conv
   alias Servy.BearController
   alias Servy.Api.BearController, as: BearApiController
-  #alias Servy.Fetcher
-  #alias Servy.VideoCam
-  #alias Servy.Tracker
+  # alias Servy.Fetcher
+  # alias Servy.VideoCam
+  # alias Servy.Tracker
   alias Servy.PledgeController
 
   @doc "Transforms a HTTP request into a HTTP response"
@@ -24,9 +24,9 @@ defmodule Servy.Handler do
     |> format_response
   end
 
-  #def route(conv) do
-    #route(conv, conv.method, conv.path)
-  #end
+  # def route(conv) do
+  # route(conv, conv.method, conv.path)
+  # end
 
   def route(%Conv{method: "POST", path: "/pledges"} = conv) do
     PledgeController.create(conv, conv.params)
@@ -43,17 +43,17 @@ defmodule Servy.Handler do
   def route(%Conv{method: "GET", path: "/snapshots"} = conv) do
     sensor_date = Servy.SensorServer.get_sensor_data()
 
-    %{ conv | status: 200, resp_body: inspect sensor_date }
+    %{conv | status: 200, resp_body: inspect(sensor_date)}
   end
 
   def route(%Conv{method: "GET", path: "/hibernate/" <> time} = conv) do
-    time |> String.to_integer |> :timer.sleep
-    %{ conv | status: 200, resp_body: "Awake!" }
+    time |> String.to_integer() |> :timer.sleep()
+    %{conv | status: 200, resp_body: "Awake!"}
   end
 
   def route(%Conv{method: "GET", path: "/wildthings"} = conv) do
     # BearController.index(conv)
-    %{ conv | status: 200, resp_body: "Bears, Lions, Tigers" }
+    %{conv | status: 200, resp_body: "Bears, Lions, Tigers"}
   end
 
   def route(%Conv{method: "GET", path: "/bears"} = conv) do
@@ -79,18 +79,18 @@ defmodule Servy.Handler do
 
     case File.read(file) do
       {:ok, contents} ->
-        %Conv{ conv | status: 200, resp_body: contents }
+        %Conv{conv | status: 200, resp_body: contents}
 
       {:error, :enoent} ->
-        %Conv{ conv | status: 404, resp_body: "File not found" }
+        %Conv{conv | status: 404, resp_body: "File not found"}
 
       {:error, reason} ->
-        %Conv{ conv | status: 500, resp_body: "Error reading the file #{reason}"}
+        %Conv{conv | status: 500, resp_body: "Error reading the file #{reason}"}
     end
   end
 
   def route(%Conv{method: _method, path: path} = conv) do
-    %{ conv | status: 404, resp_body: "No #{path} found here" }
+    %{conv | status: 404, resp_body: "No #{path} found here"}
   end
 
   def format_response(%Conv{} = conv) do

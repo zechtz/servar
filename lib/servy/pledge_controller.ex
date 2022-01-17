@@ -1,16 +1,16 @@
 defmodule Servy.PledgeController do
-
   alias Servy.PledgeServer
 
   def index(conv) do
-    # Gets the recent pledges from the cache
+    # gets the recent pledges from the cache
     pledges = PledgeServer.recent_pledges()
-    %{ conv | status: 200, resp_body: inspect pledges }
+
+    %{conv | status: 200, resp_body: inspect(pledges)}
   end
 
   def create(conv, %{"name" => name, "amount" => amount}) do
-    # sends pledge to the external service and caches it
+    # Sends the pledge to the external service and caches it
     PledgeServer.create_pledge(name, String.to_integer(amount))
-    %{ conv | status: 201, resp_body: "#{name} pledged #{amount}" }
+    %{conv | status: 201, resp_body: "#{name} pledged #{amount}!"}
   end
 end

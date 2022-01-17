@@ -6,7 +6,7 @@ defmodule Servy.MixProject do
       app: :servy,
       description: "A humble Http Server",
       version: "0.1.0",
-      elixir: "~> 1.9.4",
+      elixir: "~> 1.13.2",
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]

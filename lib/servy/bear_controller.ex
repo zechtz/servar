@@ -1,5 +1,4 @@
 defmodule Servy.BearController do
-
   alias Servy.Wildthings
   alias Servy.Bear
 
@@ -9,6 +8,7 @@ defmodule Servy.BearController do
     bears =
       Wildthings.list_bears()
       |> Enum.sort(&Bear.order_asc_by_name/2)
+
     render(conv, "index.eex", bears: bears)
   end
 
@@ -18,8 +18,8 @@ defmodule Servy.BearController do
   end
 
   def create(conv, %{"name" => name, "type" => type} = _params) do
-    #IO.puts "Params: #{inspect(params)}"
-    %{ conv | status: 201, resp_body: "Created a #{type} bear named #{name}!" }
+    # IO.puts "Params: #{inspect(params)}"
+    %{conv | status: 201, resp_body: "Created a #{type} bear named #{name}!"}
   end
 
   defp render(conv, template, bindings \\ []) do
@@ -28,6 +28,6 @@ defmodule Servy.BearController do
       |> Path.join(template)
       |> EEx.eval_file(bindings)
 
-    %{ conv | status: 200, resp_body: content }
+    %{conv | status: 200, resp_body: content}
   end
 end

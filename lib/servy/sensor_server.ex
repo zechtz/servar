@@ -1,24 +1,25 @@
 defmodule Servy.SensorServer do
   @name :sensor_server
-  @refresh_interval :timer.minutes(60) # :timer.seconds(5)
+  # :timer.seconds(5)
+  @refresh_interval :timer.minutes(60)
 
   use GenServer
 
   # Client Interface
 
   def start_link(interval) do
-    IO.puts "Starting the sensor server with #{interval} min refresh...."
+    IO.puts("Starting the sensor server with #{interval} min refresh....")
     GenServer.start_link(__MODULE__, %{}, name: @name)
   end
 
   def get_sensor_data do
-    GenServer.call @name, :get_sensor_data
+    GenServer.call(@name, :get_sensor_data)
   end
 
   # Server Callback
 
   def init(_state) do
-    initial_state = run_tasks_to_get_sensor_data();
+    initial_state = run_tasks_to_get_sensor_data()
     schedule_refresh()
     {:ok, initial_state}
   end
@@ -28,7 +29,7 @@ defmodule Servy.SensorServer do
   end
 
   def handle_info(:refresh, _state) do
-    IO.puts "Refreshing the cache...."
+    IO.puts("Refreshing the cache....")
     new_state = run_tasks_to_get_sensor_data()
     schedule_refresh()
     {:noreply, new_state}
@@ -39,7 +40,7 @@ defmodule Servy.SensorServer do
   end
 
   defp run_tasks_to_get_sensor_data do
-    IO.puts "Running tasks to get sensor data"
+    IO.puts("Running tasks to get sensor data")
 
     task = Task.async(fn -> Servy.Tracker.get_location("smokey") end)
 
@@ -49,6 +50,6 @@ defmodule Servy.SensorServer do
       |> Enum.map(&Task.await/1)
 
     wildthing = Task.await(task)
-    %{ snapshots: snapshots, location: wildthing }
+    %{snapshots: snapshots, location: wildthing}
   end
 end
